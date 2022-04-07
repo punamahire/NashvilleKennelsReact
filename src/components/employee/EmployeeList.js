@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import the components we will need
 import { EmployeeCard } from './EmployeeCard';
-import { getAllEmployees, getEmployeeById } from '../../modules/EmployeeManager';
+import { getAllEmployees, getEmployeeById, deleteEmployee } from '../../modules/EmployeeManager';
 
 export const EmployeeList = () => {
   // The initial state is an empty array
@@ -15,6 +15,11 @@ export const EmployeeList = () => {
     });
   };
 
+  const handleDeleteEmployee = id => {
+    deleteEmployee(id)
+    .then(() => getAllEmployees().then(setEmployees));
+  };
+
   // got the employees from the API on the component's first render
   useEffect(() => {
     getEmployees();
@@ -24,7 +29,10 @@ export const EmployeeList = () => {
   return (
     <div className="container-cards">
       {employees.map(employee => 
-        <EmployeeCard key={employee.id} singleEmployee={employee} />) }
+        <EmployeeCard 
+          key={employee.id} 
+          singleEmployee={employee} 
+          handleDeleteEmployee={handleDeleteEmployee} />) }
     </div>
   );
 };
