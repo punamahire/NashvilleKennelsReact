@@ -15,7 +15,7 @@ export const AnimalCard = ({ singleAnimal, handleDeleteAnimal }) => {
       <div className="card">
         <div className="card-content">
           <picture>
-              <img src={`./images/puppy_${singleAnimal.id}.png`} alt="My Dog" />
+              <img className="card-img" src={`./images/puppy_${singleAnimal.id}.png`} alt="My Dog" />
             </picture>
           <h3>Name: <span className="card-petname">
             {singleAnimal.name}
@@ -23,6 +23,9 @@ export const AnimalCard = ({ singleAnimal, handleDeleteAnimal }) => {
           <p>Breed: {singleAnimal.breed}</p>
           <Link to={`/animals/${singleAnimal.id}`}>
             <button>Details</button>
+          </Link>
+          <Link to={`/animals/${singleAnimal.id}/edit`}>
+            <button>Edit</button>
           </Link>
           <button type="button" onClick={() => handleDeleteAnimal(singleAnimal.id)}>Discharge</button>
         </div>

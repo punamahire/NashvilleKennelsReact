@@ -16,7 +16,7 @@ export const AnimalForm = () => {
 		customerId: 0
 	});
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	// you will need the the `getAll` in the LocationsManager and CustomersManager to complete this section
 	const [locations, setLocations] = useState([]);
@@ -37,6 +37,7 @@ export const AnimalForm = () => {
 		if (event.target.id.includes("Id")) {
 			selectedVal = parseInt(selectedVal)
 		}
+
 		/* Animal is an object with properties.
 		Set the property to the new value
 		using object bracket notation. */
@@ -45,9 +46,11 @@ export const AnimalForm = () => {
         //       of an animal: name, breed, locationId and customerId.
         //       This is the reason why we set the id to the property 
         //       names in the form elements.
+		
 		newAnimal[event.target.id] = selectedVal
 		// update state
 		setAnimal(newAnimal)
+		
 	}
 
     useEffect(() => {
@@ -56,6 +59,7 @@ export const AnimalForm = () => {
         getAllLocations().then(locationsFromAPI => {
             setLocations(locationsFromAPI)
         });
+		setIsLoading(false);
 	}, []);
 
      useEffect(() => {
@@ -64,6 +68,7 @@ export const AnimalForm = () => {
         getAllCustomers().then(customersFromAPI => {
             setCustomers(customersFromAPI)
         });
+		setIsLoading(false);
 	}, []);
 
 
@@ -75,9 +80,12 @@ export const AnimalForm = () => {
 
 		if (locationId === 0 || customerId === 0) {
 			window.alert("Please select a location and a customer")
+		} else if (animal.name === "" || animal.breed === "") {
+			window.alert("Please enter owner's name and address")
 		} else {
 			//invoke addAnimal passing animal as an argument.
 			//once complete, change the url and display the animal list
+			setIsLoading(true);
 			addAnimal(animal)
 				.then(() => navigate("/animals"))
 		}
@@ -125,6 +133,7 @@ export const AnimalForm = () => {
 				</div>
 			</fieldset>
 			<button type="button" className="btn btn-primary"
+				disabled={isLoading}
 				onClick={handleClickSaveAnimal}>
 				Save Animal
           </button>

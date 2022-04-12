@@ -1,15 +1,22 @@
-import React, { useRef } from "react"
+import React, { useState, useRef } from "react"
 import { Link } from "react-router-dom";
 import { useNavigate} from "react-router-dom"
 import "./Login.css"
 
-export const Login = ({setAuthUser}) => {
+export const Login = ({setAuthUser, setAuth}) => {
     const email = useRef()
     const existDialog = useRef()
     const navigate = useNavigate()
+    const [isChecked, setIsChecked] = useState(false);
+    const [user, setUser] = useState("")
+
+    const handleOnChange = () => {
+        setIsChecked(!isChecked);
+        console.log("isChecked", isChecked)
+    };
 
     const existingUserCheck = () => {
-        return fetch(`http://localhost:8088/customers?email=${email.current.value}`)
+        return fetch(`http://localhost:5002/customers?email=${email.current.value}`)
             .then(res => res.json())
             .then(user => user.length ? user[0] : false)
     }
@@ -20,7 +27,19 @@ export const Login = ({setAuthUser}) => {
         existingUserCheck()
             .then(exists => {
                 if (exists) {
-                    setAuthUser(exists)
+                    if (isChecked) {
+                        // set component state
+                        setUser(exists) 
+                        // set isAuthenticated to true allowing user 
+                        // to access animals, employees and customers info
+                        setAuth(true)   
+                        // set local storage 
+                        localStorage.setItem("kennel_customer", JSON.stringify(exists));
+                        console.log(user)
+                    } else {
+                        // set session storage
+                        setAuthUser(exists)
+                    }
                     navigate("/")
                 } else {
                     existDialog.current.showModal()
@@ -30,6 +49,7 @@ export const Login = ({setAuthUser}) => {
 
     return (
         <main className="container--login">
+            {console.log("inside Login.js")}
             <dialog className="dialog dialog--auth" ref={existDialog}>
                 <div>User does not exist</div>
                 <button className="button--close" onClick={e => existDialog.current.close()}>Close</button>
@@ -51,6 +71,13 @@ export const Login = ({setAuthUser}) => {
                         <button type="submit">
                             Sign in
                         </button>
+                    </fieldset>
+                    <fieldset>
+                        <input id="rem--me--checkbox" name="rem--checkbox" type="checkbox" 
+                                checked={isChecked}
+                                onChange={handleOnChange}
+                        /> 
+                        <label htmlFor="rem--checkbox">Remember Me</label>
                     </fieldset>
                 </form>
             </section>

@@ -3,8 +3,6 @@ import "./Location.css"
 import { Link } from "react-router-dom";
 
 export const LocationCard = ({singleLocation, handleDeleteLocation}) => {
-    
-    // console.log(singleLocation);
 
     return (
         <section className="location">
@@ -12,6 +10,9 @@ export const LocationCard = ({singleLocation, handleDeleteLocation}) => {
             <div className="location__address">{singleLocation.address}</div>
             <Link to={`/locations/${singleLocation.id}`}>
                 <button>Details</button>
+            </Link>
+            <Link to={`/locations/${singleLocation.id}/edit`}>
+                <button>Edit</button>
             </Link>
             <button type="button" onClick={() => handleDeleteLocation(singleLocation.id)}>Remove Location</button>
         </section>
